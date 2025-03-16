@@ -1,5 +1,6 @@
 package com.example.menu_restaurant.model;
 
+import com.opencsv.bean.CsvBindByName;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -13,8 +14,13 @@ public class Document {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @CsvBindByName(column = "title")
     private String title;
+
+    @CsvBindByName(column = "type")
     private String type;
+
+    @CsvBindByName(column = "content")
     private String content;
 
     private LocalDateTime createdAt= LocalDateTime.now();

@@ -35,7 +35,8 @@ public class MenuDataLoader {
             } catch (Exception e) {
                 System.err.println("Ошибка загрузки CSV: " + e.getMessage());
             }
+        }
+
+
     }
-
-
 }
