@@ -1,3 +1,4 @@
 title,type,content
-Invoice_001,Invoice,Payment for order #1
-Recipe_002,Recipe,Instructions for Pizza
+"Invoice_001","Invoice","Payment for order #1"
+"Recipe_002","Recipe","Instructions for Pizza"
+"Menu Update","Update","Updated the restaurant menu"
