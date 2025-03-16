@@ -1,5 +1,5 @@
 name,price,rating,category
-Pizza,340,4.5,Italian
-Beshbarmak,250,5.0,Kyrgyz
-Burger,180,4.6,Fast Food
-Sushi,400,4.1,Japanese
+Pizza,340,4,Italian
+Beshbarmak,250,5,Kyrgyz
+Burger,180,4,Fast Food
+Sushi,400,3,Japanese
