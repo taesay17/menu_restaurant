@@ -1,4 +1,4 @@
-package com.example.menu_restaurant.controller;
+package com.example.menu_restaurant.repositoryTest;
 
 import com.example.menu_restaurant.model.Document;
 import com.example.menu_restaurant.service.DocumentService;

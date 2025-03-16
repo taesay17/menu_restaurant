@@ -1,4 +1,4 @@
-package com.example.menu_restaurant;
+package com.example.menu_restaurant.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.example.menu_restaurant.model.dto.MenuRequest;

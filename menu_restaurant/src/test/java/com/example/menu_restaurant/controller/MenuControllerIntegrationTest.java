@@ -1,3 +1,5 @@
+package com.example.menu_restaurant.controller;
+
 import com.example.menu_restaurant.model.dto.MenuRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;

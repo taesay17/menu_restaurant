@@ -1,3 +1,5 @@
+package com.example.menu_restaurant.mapper;
+
 import com.example.menu_restaurant.mapper.MenuMapper;
 import com.example.menu_restaurant.mapper.impl.MenuMapperImpl;
 import com.example.menu_restaurant.model.Menu;
