@@ -1,5 +1,6 @@
 package com.example.menu_restaurant.service.impl;
 
+import com.example.menu_restaurant.exception.DocumentNotFoundException;
 import com.example.menu_restaurant.exception.MenuException;
 import com.example.menu_restaurant.model.Document;
 import com.example.menu_restaurant.model.Menu;
@@ -25,4 +26,25 @@ public class DocumentServiceImpl implements DocumentService {
         menuRepository.save(menu);
         return "Document added succesfully";
     }
+
+    @Override
+    public Document findById(Long id) {
+        return documentRepository.findById(id)
+                .orElseThrow(() -> new DocumentNotFoundException(id));
+    }
+
+    @Override
+    public Document save(Document document) {
+        return documentRepository.save(document);
+    }
+
+    @Override
+    public void delete(Long id) {
+        if (!documentRepository.existsById(id)) {
+            throw new DocumentNotFoundException(id);
+        }
+        documentRepository.deleteById(id);
+    }
+
+
 }

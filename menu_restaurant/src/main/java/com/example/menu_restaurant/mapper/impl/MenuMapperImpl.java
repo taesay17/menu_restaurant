@@ -17,6 +17,7 @@ public class MenuMapperImpl implements MenuMapper {
         menu.setName(request.getName());
         menu.setPrice(request.getPrice());
         menu.setRating(request.getRating());
+        menu.setCategory(request.getCategory());
         return menu;
     }
 
@@ -25,6 +26,7 @@ public class MenuMapperImpl implements MenuMapper {
         MenuResponse menuResponse = new MenuResponse();
         menuResponse.setName(menu.getName());
         menuResponse.setPrice(menu.getPrice());
+        menuResponse.setCategory(menu.getCategory());
         return menuResponse;
     }
 
@@ -42,6 +44,7 @@ public class MenuMapperImpl implements MenuMapper {
         menu.setName(request.getName());
         menu.setPrice(request.getPrice());
         menu.setRating(request.getRating());
+        menu.setCategory(request.getCategory());
         return menu;
     }
 }

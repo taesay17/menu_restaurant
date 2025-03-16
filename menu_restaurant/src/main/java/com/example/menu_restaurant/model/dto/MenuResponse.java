@@ -6,4 +6,5 @@ import lombok.Data;
 public class MenuResponse {
     private String name;
     private double price;
+    private String category;
 }

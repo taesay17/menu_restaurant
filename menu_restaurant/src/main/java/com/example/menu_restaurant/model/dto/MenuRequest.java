@@ -8,4 +8,5 @@ public class MenuRequest {
     private String name;
     private double price;
     private int rating;
+    private String category;
 }

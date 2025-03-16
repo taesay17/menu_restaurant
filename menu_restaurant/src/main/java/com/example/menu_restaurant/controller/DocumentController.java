@@ -1,11 +1,10 @@
 package com.example.menu_restaurant.controller;
 
+import com.example.menu_restaurant.model.Document;
 import com.example.menu_restaurant.service.DocumentService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
@@ -16,5 +15,10 @@ public class DocumentController {
     @PostMapping("/create/{id}")
     public String createDocument(@PathVariable Long id) {
         return documentService.addDocument(id);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Document> getDocument(@PathVariable Long id) {
+        return ResponseEntity.ok(documentService.findById(id));
     }
 }
