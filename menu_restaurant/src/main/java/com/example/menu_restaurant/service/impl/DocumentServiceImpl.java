@@ -1,50 +1,62 @@
 package com.example.menu_restaurant.service.impl;
 
-import com.example.menu_restaurant.exception.DocumentNotFoundException;
-import com.example.menu_restaurant.exception.MenuException;
+import com.example.menu_restaurant.mapper.DocumentMapper;
 import com.example.menu_restaurant.model.Document;
-import com.example.menu_restaurant.model.Menu;
+import com.example.menu_restaurant.model.dto.DocumentRequest;
 import com.example.menu_restaurant.repository.DocumentRepository;
-import com.example.menu_restaurant.repository.MenuRepository;
 import com.example.menu_restaurant.service.DocumentService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class DocumentServiceImpl implements DocumentService {
     private final DocumentRepository documentRepository;
-    private final MenuRepository menuRepository;
+    private final DocumentMapper documentMapper;
 
     @Override
-    public String addDocument(Long menuId) {
-        Menu menu = menuRepository.findById(menuId).orElseThrow(() -> new MenuException("Menu product not found", HttpStatus.NOT_FOUND));
-        Document document = new Document();
-        document = documentRepository.save(document);
-        menu.setDocument(document);
-        menuRepository.save(menu);
-        return "Document added succesfully";
+    public Document createDocument(DocumentRequest request) {
+        Document document = documentMapper.toDocument(request);
+        return documentRepository.save(document);
     }
+
 
     @Override
     public Document findById(Long id) {
-        return documentRepository.findById(id)
-                .orElseThrow(() -> new DocumentNotFoundException(id));
+        return documentRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Document getDocumentById(Long id) {
+        return documentRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Document updateDocumentById(Long id, DocumentRequest request) {
+        Document document = documentRepository.findById(id).orElse(null);
+        document = documentMapper.toUpdateDocument(request, document);
+        return documentRepository.save(document);
+    }
+
+    @Override
+    public void deleteDocumentByTitle(String title) {
+        documentRepository.deleteByTitle(title);
+    }
+
+    @Override
+    public Optional<Document> findByTitle(String title) {
+        return documentRepository.findByTitle(title);
     }
 
     @Override
     public Document save(Document document) {
         return documentRepository.save(document);
     }
-
     @Override
-    public void delete(Long id) {
-        if (!documentRepository.existsById(id)) {
-            throw new DocumentNotFoundException(id);
-        }
-        documentRepository.deleteById(id);
+    public boolean existsByTitle(String title) {
+        return (boolean) documentRepository.existsByTitle(title);
     }
-
 
 }

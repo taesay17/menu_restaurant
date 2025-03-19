@@ -2,8 +2,10 @@ package com.example.menu_restaurant.service.impl;
 
 import com.example.menu_restaurant.exception.DocumentNotFoundException;
 import com.example.menu_restaurant.exception.MenuException;
+import com.example.menu_restaurant.mapper.DocumentMapper;
 import com.example.menu_restaurant.model.Document;
 import com.example.menu_restaurant.model.Menu;
+import com.example.menu_restaurant.model.dto.DocumentRequest;
 import com.example.menu_restaurant.repository.DocumentRepository;
 import com.example.menu_restaurant.repository.MenuRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,13 +28,17 @@ class DocumentServiceImplTest {
     private DocumentRepository documentRepository;
 
     @Mock
+    private DocumentMapper documentMapper;
+
+    @Mock
     private MenuRepository menuRepository;
+
+    private DocumentRequest documentRequest;
 
     @InjectMocks
     private DocumentServiceImpl documentService;
 
     private Document document;
-    private Menu menu;
 
     @BeforeEach
     void setUp() {
@@ -40,31 +46,20 @@ class DocumentServiceImplTest {
         document.setId(1L);
         document.setTitle("Test Document");
 
-        menu = new Menu();
-        menu.setId(1L);
+        documentRequest = new DocumentRequest();
+        documentRequest.setTitle("Recipe 001");
     }
 
-    @Test
-    void addDocument_Success() {
-        when(menuRepository.findById(1L)).thenReturn(Optional.of(menu));
-        when(documentRepository.save(any(Document.class))).thenReturn(document);
-        when(menuRepository.save(menu)).thenReturn(menu);
-
-        String result = documentService.addDocument(1L);
-
-        assertEquals("Document added succesfully", result);
-        assertNotNull(menu.getDocument());
-        verify(documentRepository, times(1)).save(any(Document.class));
-        verify(menuRepository, times(1)).save(menu);
-    }
 
     @Test
-    void addDocument_MenuNotFound() {
-        when(menuRepository.findById(1L)).thenReturn(Optional.empty());
+    void createDocument() {
+        when(documentMapper.toDocument(documentRequest)).thenReturn(document);
+        when(documentRepository.save(document)).thenReturn(document);
 
-        MenuException exception = assertThrows(MenuException.class, () -> documentService.addDocument(1L));
-        assertEquals("Menu product not found", exception.getMessage());
-        assertEquals(HttpStatus.NOT_FOUND, exception.getStatus());
+        Document createdDocument = documentService.createDocument(documentRequest);
+
+        assertNotNull(createdDocument);
+        verify(documentRepository, times(1)).save(document);
     }
 
     @Test
@@ -75,12 +70,7 @@ class DocumentServiceImplTest {
         assertEquals(document, found);
     }
 
-    @Test
-    void findById_NotFound() {
-        when(documentRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(DocumentNotFoundException.class, () -> documentService.findById(1L));
-    }
 
     @Test
     void saveDocument() {
@@ -91,18 +81,16 @@ class DocumentServiceImplTest {
     }
 
     @Test
-    void deleteDocument_Success() {
-        when(documentRepository.existsById(1L)).thenReturn(true);
-        doNothing().when(documentRepository).deleteById(1L);
+    void deleteDocumentByTitle_Success() {
+        when(documentRepository.existsByTitle("Test Document")).thenReturn(true);
 
-        assertDoesNotThrow(() -> documentService.delete(1L));
-        verify(documentRepository, times(1)).deleteById(1L);
+        doNothing().when(documentRepository).deleteByTitle("Test Document");
+
+        assertDoesNotThrow(() -> documentService.deleteDocumentByTitle("Test Document"));
+
+        verify(documentRepository, times(1)).deleteByTitle("Test Document");
     }
 
-    @Test
-    void deleteDocument_NotFound() {
-        when(documentRepository.existsById(1L)).thenReturn(false);
 
-        assertThrows(DocumentNotFoundException.class, () -> documentService.delete(1L));
-    }
+
 }
