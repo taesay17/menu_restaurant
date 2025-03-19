@@ -44,7 +44,7 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public Optional<Menu> findByRating(int rating) {
+    public List<Menu> findByRating(int rating) {
         return menuRepository.findByRating(rating);
     }
 

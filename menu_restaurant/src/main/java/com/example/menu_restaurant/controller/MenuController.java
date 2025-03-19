@@ -41,7 +41,7 @@ public class MenuController {
         return menuService.getMenuByName(name);
     }
     @GetMapping("/find/{rating}")
-    public Optional<Menu> findMenuRating(@PathVariable int rating) {
+    public List<Menu> findMenuRating(@PathVariable int rating) {
         return menuService.findByRating(rating);
     }
     @DeleteMapping("/deleteName/{name}")

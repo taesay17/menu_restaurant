@@ -108,12 +108,15 @@ class MenuServiceImplTest {
 
     @Test
     void findByRating_Success() {
-        when(menuRepository.findByRating(5)).thenReturn(Optional.of(menu));
+        List<Menu> menuList = List.of(menu);
+        when(menuRepository.findByRating(5)).thenReturn(menuList);
 
-        Optional<Menu> foundMenu = menuService.findByRating(5);
-        assertTrue(foundMenu.isPresent());
-        assertEquals(5, foundMenu.get().getRating());
+        List<Menu> foundMenus = menuService.findByRating(5);
+
+        assertFalse(foundMenus.isEmpty());
+        assertEquals(5, foundMenus.get(0).getRating());
     }
+
 
     @Test
     void getMenuByName_Success() {

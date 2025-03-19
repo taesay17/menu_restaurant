@@ -13,7 +13,7 @@ public interface MenuService {
     Menu updateMenuById(Long id, MenuRequest request);
     void deleteMenuById(Long id);
     List<Menu> findAll();
-    Optional<Menu> findByRating(int rating);
+    List<Menu> findByRating(int rating);
     List<MenuResponse> menuList();
     Optional<Menu> getMenuByName(String name);
     String deleteMenuByName(String name);

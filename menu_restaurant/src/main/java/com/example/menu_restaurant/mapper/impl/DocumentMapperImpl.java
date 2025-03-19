@@ -17,17 +17,20 @@ public class DocumentMapperImpl implements DocumentMapper {
         document.setTitle(request.getTitle());
         document.setType(request.getType());
         document.setContent(request.getContent());
+        document.setCreatedAt(LocalDateTime.now());
         return document;
     }
 
     @Override
-    public DocumentResponse toResponse(Document doсument) {
+    public DocumentResponse toResponse(Document document) {
         DocumentResponse documentResponse = new DocumentResponse();
-        documentResponse.setTitle(documentResponse.getTitle());
-        documentResponse.setType(documentResponse.getType());
-        documentResponse.setContent(documentResponse.getContent());
+        documentResponse.setTitle(document.getTitle());
+        documentResponse.setType(document.getType());
+        documentResponse.setContent(document.getContent());
         return documentResponse;
     }
+
+
 
     @Override
     public Document toUpdateDocument(DocumentRequest request, Document document) {

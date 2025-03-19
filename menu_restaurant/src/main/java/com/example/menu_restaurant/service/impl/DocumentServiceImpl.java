@@ -5,6 +5,7 @@ import com.example.menu_restaurant.model.Document;
 import com.example.menu_restaurant.model.dto.DocumentRequest;
 import com.example.menu_restaurant.repository.DocumentRepository;
 import com.example.menu_restaurant.service.DocumentService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -41,9 +42,11 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
+    @Transactional
     public void deleteDocumentByTitle(String title) {
         documentRepository.deleteByTitle(title);
     }
+
 
     @Override
     public Optional<Document> findByTitle(String title) {
@@ -56,7 +59,9 @@ public class DocumentServiceImpl implements DocumentService {
     }
     @Override
     public boolean existsByTitle(String title) {
-        return (boolean) documentRepository.existsByTitle(title);
+        return documentRepository.existsByTitle(title);
     }
+
+
 
 }

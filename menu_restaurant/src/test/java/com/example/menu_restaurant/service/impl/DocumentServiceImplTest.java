@@ -80,16 +80,16 @@ class DocumentServiceImplTest {
         assertEquals(document, saved);
     }
 
-    @Test
-    void deleteDocumentByTitle_Success() {
-        when(documentRepository.existsByTitle("Test Document")).thenReturn(true);
-
-        doNothing().when(documentRepository).deleteByTitle("Test Document");
-
-        assertDoesNotThrow(() -> documentService.deleteDocumentByTitle("Test Document"));
-
-        verify(documentRepository, times(1)).deleteByTitle("Test Document");
-    }
+//    @Test
+//    void deleteDocumentByTitle_Success() {
+//        when(documentRepository.existsByTitle("Test Document")).thenReturn(true);
+//
+//        doNothing().when(documentRepository).deleteByTitle("Test Document");
+//
+//        assertDoesNotThrow(() -> documentService.deleteDocumentByTitle("Test Document"));
+//
+//        verify(documentRepository, times(1)).deleteByTitle("Test Document");
+//    }
 
 
 

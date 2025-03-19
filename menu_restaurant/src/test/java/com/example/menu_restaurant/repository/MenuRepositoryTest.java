@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -43,9 +44,9 @@ class MenuRepositoryTest {
 
     @Test
     void findByRating_Success() {
-        Optional<Menu> foundMenu = menuRepository.findByRating(5);
-        assertTrue(foundMenu.isPresent());
-        assertEquals(5, foundMenu.get().getRating());
+        List<Menu> foundMenus = menuRepository.findByRating(5);
+        assertFalse(foundMenus.isEmpty());
+        assertEquals(5, foundMenus.get(0).getRating());
     }
 
     @Test
