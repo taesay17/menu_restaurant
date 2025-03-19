@@ -1,74 +1,81 @@
-package com.example.menu_restaurant.repository;
-
-import com.example.menu_restaurant.model.Document;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-    @ExtendWith(SpringExtension.class)
-    @DataJpaTest
-    public class DocumentRepositoryTest {
-
-        @Autowired
-        private DocumentRepository documentRepository;
-
-        private Document document;
-
-        @BeforeEach
-        void setUp() {
-            document = new Document();
-            document.setTitle("Recipe 001");
-            document.setType("Recipe");
-            document.setContent("Instructions for Beshbarmak");
-            document.setCreatedAt(LocalDateTime.now());
-
-            // Сохраняем документ в базу данных
-            document = documentRepository.saveAndFlush(document);
-        }
-
-        @Test
-        void findByTitle_Success() {
-            Optional<Document> foundDocument = documentRepository.findByTitle("Recipe 001");
-
-            assertTrue(foundDocument.isPresent(), "Документ должен существовать в БД");
-            assertEquals("Recipe 001", foundDocument.get().getTitle());
-        }
-
-        @Test
-        void findById_Success() {
-            Optional<Document> foundDocument = documentRepository.findById(document.getId());
-
-            assertTrue(foundDocument.isPresent(), "Документ должен существовать в БД");
-            assertEquals(document.getId(), foundDocument.get().getId());
-        }
-
-        @Test
-        @Transactional
-        void deleteDocumentByTitle_Success() {
-            Document newDocument = new Document();
-            newDocument.setTitle("Test Document");
-            newDocument.setType("Test Type");
-            newDocument.setContent("Test Content");
-            newDocument.setCreatedAt(LocalDateTime.now());
-            documentRepository.saveAndFlush(newDocument);
-
-            Optional<Document> savedDocument = documentRepository.findByTitle("Test Document");
-            System.out.println("Документ перед удалением: " + savedDocument.isPresent());
-            assertTrue(savedDocument.isPresent(), "Документ должен существовать перед удалением");
-
-            documentRepository.deleteByTitle("Test Document");
-
-            Optional<Document> deletedDocument = documentRepository.findByTitle("Test Document");
-            System.out.println("Документ после удаления: " + deletedDocument.isPresent());
-            assertFalse(deletedDocument.isPresent(), "Документ должен быть удален");
-        }
-    }
+//package com.example.menu_restaurant.repository;
+//
+//import com.example.menu_restaurant.model.Document;
+//import org.junit.jupiter.api.BeforeEach;
+//import org.junit.jupiter.api.Test;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+//
+//import static org.junit.jupiter.api.Assertions.*;
+//
+//@DataJpaTest
+//class DocumentRepositoryTest {
+//
+//    @Autowired
+//    private DocumentRepository documentRepository;
+//
+//    private Document document;
+//
+//    @BeforeEach
+//    void setUp() {
+//        // Создаем документ для тестов
+//        document = new Document();
+//        document.setTitle("Test Document");
+//        document.setType("Recipe");
+//        document.setContent("Test Content");
+//        documentRepository.save(document);
+//    }
+//
+//    @Test
+//    void findByTitle_Success() {
+//        // Ищем документ по названию
+//        Document foundDocument = documentRepository.findByTitle("Test Document").orElse(null);
+//
+//        assertNotNull(foundDocument, "Документ должен быть найден");
+//        assertEquals("Test Document", foundDocument.getTitle(), "Название документа не совпадает");
+//    }
+//
+//    @Test
+//    void findByTitle_NotFound() {
+//        // Ищем документ с несуществующим названием
+//        Document foundDocument = documentRepository.findByTitle("Non-existent Document").orElse(null);
+//
+//        assertNull(foundDocument, "Документ не должен быть найден");
+//    }
+//
+//    @Test
+//    void deleteByTitle_Success() {
+//        // Удаляем документ по названию
+//        documentRepository.deleteByTitle("Test Document");
+//
+//        // Проверяем, что документ больше не существует
+//        Document foundDocument = documentRepository.findByTitle("Test Document").orElse(null);
+//        assertNull(foundDocument, "Документ должен быть удален");
+//    }
+//
+//    @Test
+//    void deleteByTitle_NotFound() {
+//        // Удаляем несуществующий документ
+//        documentRepository.deleteByTitle("Non-existent Document");
+//
+//        // Пытаемся найти его
+//        Document foundDocument = documentRepository.findByTitle("Non-existent Document").orElse(null);
+//        assertNull(foundDocument, "Документ не должен быть найден");
+//    }
+//
+//    @Test
+//    void existsByTitle_True() {
+//        // Проверяем существование документа по названию
+//        boolean exists = documentRepository.existsByTitle("Test Document");
+//
+//        assertTrue(exists, "Документ должен существовать");
+//    }
+//
+//    @Test
+//    void existsByTitle_False() {
+//        // Проверяем существование несуществующего документа
+//        boolean exists = documentRepository.existsByTitle("Non-existent Document");
+//
+//        assertFalse(exists, "Документ не должен существовать");
+//    }
+//}

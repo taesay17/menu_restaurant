@@ -1,4 +1,4 @@
-package com.example.menu_restaurant.mapper.impl;
+package com.example.menu_restaurant.mapper;
 
 import com.example.menu_restaurant.model.Document;
 import com.example.menu_restaurant.model.dto.DocumentRequest;
