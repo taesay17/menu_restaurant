@@ -4,6 +4,7 @@ import com.example.menu_restaurant.model.dto.MenuRequest;
 import com.example.menu_restaurant.model.Menu;
 import com.example.menu_restaurant.service.MenuService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,10 +17,12 @@ import java.util.Optional;
 public class MenuController {
     private final MenuService menuService;
 
-    @PostMapping("/create")
-    public Menu createMenuList(@RequestBody MenuRequest request) {
-        return menuService.createMenuList(request);
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping
+    public Menu createMenu(@RequestBody Menu menu) {
+        return menuService.save(menu);
     }
+
     @GetMapping("/get/{id}")
     public Menu getMenuById(@PathVariable Long id) {
         return menuService.getMenuById(id);
