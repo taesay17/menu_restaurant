@@ -17,4 +17,6 @@ public interface MenuService {
     List<MenuResponse> menuList();
     Optional<Menu> getMenuByName(String name);
     String deleteMenuByName(String name);
+
+    Menu save(Menu menu);
 }

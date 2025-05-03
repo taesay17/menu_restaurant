@@ -6,6 +6,8 @@ import com.example.menu_restaurant.model.dto.AuthResponse;
 import com.example.menu_restaurant.repository.UserRepository;
 import com.example.menu_restaurant.security.JwtUtils;
 import com.example.menu_restaurant.security.UserDetails;
+import com.example.menu_restaurant.security.UserDetailsService;
+import com.example.menu_restaurant.security.impl.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,6 +37,7 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
         if (userRepository.existsByUsername(user.getUsername())) {
@@ -50,14 +53,21 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequest request) {
+        // Проводим аутентификацию
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+                new UsernamePasswordAuthenticationToken(
+                        request.getUsername(),
+                        request.getPassword()
+                )
         );
 
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
         String token = jwtUtils.generateToken(userDetails);
+
 
         return ResponseEntity.ok(new AuthResponse(token));
     }
+
 }
 
