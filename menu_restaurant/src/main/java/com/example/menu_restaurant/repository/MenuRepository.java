@@ -13,11 +13,16 @@ import java.util.Optional;
 
 @Repository
 public interface MenuRepository extends JpaRepository<Menu, Long> {
+
     Optional<Menu> findByName(String name);
+
     List<Menu> findByRating(int rating);
+
+    boolean existsByName(String name);
 
     @Modifying
     @Transactional
     @Query("DELETE FROM Menu m WHERE m.name = :name")
     void deleteMenuByName(@Param("name") String name);
 }
+

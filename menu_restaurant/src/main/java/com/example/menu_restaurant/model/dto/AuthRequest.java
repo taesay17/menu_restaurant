@@ -4,23 +4,9 @@ public class AuthRequest {
     private String username;
     private String password;
 
-    // Геттер для username
-    public String getUsername() {
-        return username;
-    }
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
 
-    // Сеттер для username
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    // Геттер для password
-    public String getPassword() {
-        return password;
-    }
-
-    // Сеттер для password
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 }
