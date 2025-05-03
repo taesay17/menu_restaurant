@@ -66,16 +66,12 @@ public class AuthController {
                 )
         );
 
-        // 1. Получаем данные пользователя
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        // 2. Генерируем access token
         String token = jwtUtils.generateToken(userDetails);
 
-        // 3. Генерируем refresh token
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getUser());
 
-        // 4. Отправляем оба токена клиенту
         return ResponseEntity.ok(new AuthResponse(token, refreshToken.getToken()));
     }
 
