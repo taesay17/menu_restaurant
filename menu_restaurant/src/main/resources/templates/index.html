@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome - Menu Restaurant</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" /> <!-- если есть CSS -->
+</head>
+<body>
+<h1>Welcome to Menu Restaurant!</h1>
+
+
+
+
+<nav>
+    <ul>
+        <li><a th:href="@{/users}">Users</a></li>
+        <li><a th:href="@{/menus}">Menus</a></li>
+        <li><a th:href="@{/documents}">Documents</a></li>
+        <li><a th:href="@{/logout}">Logout</a></li>
+    </ul>
+</nav>
+
+</body>
+</html>

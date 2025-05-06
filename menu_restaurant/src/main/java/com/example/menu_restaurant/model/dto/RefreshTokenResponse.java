@@ -1,19 +1,16 @@
 package com.example.menu_restaurant.model.dto;
 
-public class AuthResponse {
+public class RefreshTokenResponse {
+
     private String accessToken;
     private String refreshToken;
 
-    public AuthResponse(String accessToken, String refreshToken) {
+    public RefreshTokenResponse() {
+    }
+
+    public RefreshTokenResponse(String accessToken, String refreshToken) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
-    }
-
-    public AuthResponse(String accessToken) {
-        this.accessToken = accessToken;
-    }
-
-    public AuthResponse() {
     }
 
     public String getAccessToken() {

@@ -19,11 +19,14 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
     private final UserDetailsService userDetailsService;
+    private final SkipPathRequestMatcher skipPathRequestMatcher;
 
-    // Современная конструкторная инъекция
-    public JwtFilter(JwtUtils jwtUtils, UserDetailsService userDetailsService) {
+    public JwtFilter(JwtUtils jwtUtils,
+                     UserDetailsService userDetailsService,
+                     SkipPathRequestMatcher skipPathRequestMatcher) {
         this.jwtUtils = jwtUtils;
         this.userDetailsService = userDetailsService;
+        this.skipPathRequestMatcher = skipPathRequestMatcher;
     }
 
     @Override
@@ -31,44 +34,31 @@ public class JwtFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        final String authHeader = request.getHeader("Authorization");
-
-        String token = null;
-        String username = null;
-
-        // 1. Проверяем есть ли токен и начинается ли с Bearer
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            token = authHeader.substring(7);
-            username = jwtUtils.extractUsername(token);
+        // Если путь должен пропускаться - не обрабатываем JWT
+        if (skipPathRequestMatcher.shouldSkip(request)) {
+            filterChain.doFilter(request, response);
+            return;
         }
 
-        // 2. Если токен и имя пользователя получены, и пользователь ещё не аутентифицирован
+        final String authHeader = request.getHeader("Authorization");
+        String jwt = null;
+        String username = null;
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            jwt = authHeader.substring(7);
+            username = jwtUtils.extractUsername(jwt);
+        }
+
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-
-            // 3. Загружаем пользователя
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
-            // 4. Проверяем действителен ли токен
-            if (jwtUtils.validateToken(token, userDetails)) {
-
-                // 5. Создаём аутентификацию
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(
-                                userDetails,
-                                null,
-                                userDetails.getAuthorities()
-                        );
-
-                authentication.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails(request)
-                );
-
-                // 6. Устанавливаем аутентификацию в контекст
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+            if (jwtUtils.validateToken(jwt, userDetails)) {
+                UsernamePasswordAuthenticationToken authToken =
+                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
 
-        // 7. Передаём запрос дальше по цепочке фильтров
         filterChain.doFilter(request, response);
     }
 }

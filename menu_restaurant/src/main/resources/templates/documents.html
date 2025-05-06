@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Document List</title>
+</head>
+<body>
+<h1>Список Документов</h1>
+<table border="1">
+  <tr>
+    <th>ID</th>
+    <th>Название</th>
+    <th>Описание</th>
+    <th>Дата</th>
+  </tr>
+  <tr th:each="doc : ${documents}">
+    <td th:text="${doc.id}"></td>
+    <td th:text="${doc.title}"></td>
+    <td th:text="${doc.description}"></td>
+    <td th:text="${doc.date}"></td>
+  </tr>
+</table>
+</body>
+</html>

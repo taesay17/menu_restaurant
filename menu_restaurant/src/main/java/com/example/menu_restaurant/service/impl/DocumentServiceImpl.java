@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -62,6 +63,10 @@ public class DocumentServiceImpl implements DocumentService {
         return documentRepository.existsByTitle(title);
     }
 
+    @Override
+    public List<Document> findAll() {
+        return documentRepository.findAll();
+    }
 
 
 }

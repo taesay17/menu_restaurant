@@ -4,6 +4,7 @@ import com.example.menu_restaurant.model.Document;
 import com.example.menu_restaurant.model.dto.DocumentRequest;
 import com.example.menu_restaurant.repository.DocumentRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface DocumentService {
@@ -20,6 +21,7 @@ public interface DocumentService {
 
     Document updateDocumentById(Long id, DocumentRequest documentRequest);
     void deleteDocumentByTitle(String title);
+    List<Document> findAll();
 
 
     boolean existsByTitle(String title);
