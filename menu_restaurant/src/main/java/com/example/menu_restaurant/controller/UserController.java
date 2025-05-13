@@ -1,8 +1,11 @@
 package com.example.menu_restaurant.controller;
 
+import com.example.menu_restaurant.model.Role;
 import com.example.menu_restaurant.model.User;
+import com.example.menu_restaurant.repository.RoleRepository;
 import com.example.menu_restaurant.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +22,9 @@ public class UserController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     @PostMapping("/create")
     public User createUser(@RequestBody User user) {
         if (userRepository.existsByUsername(user.getUsername())) {
@@ -27,10 +33,17 @@ public class UserController {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new RuntimeException("Email already taken");
         }
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles(Set.of("ROLE_USER"));
+
+        Role userRole = roleRepository.findByName("ROLE_USER")
+                .orElseThrow(() -> new RuntimeException("ROLE_USER not found"));
+
+        user.setRoles(Set.of(userRole));
+
         return userRepository.save(user);
     }
+
 
     @GetMapping("/get/{id}")
     public Optional<User> getUserById(@PathVariable Long id) {

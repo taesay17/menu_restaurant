@@ -1,25 +1,65 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ru">
 <head>
-  <title>Menu List</title>
+  <meta charset="UTF-8">
+  <title>Меню</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+  <script>
+    async function loadMenus() {
+      const token = localStorage.getItem('accessToken');
+      if (!token) {
+        alert('Вы не авторизованы! Переход на страницу входа.');
+        window.location.href = "/login";
+        return;
+      }
+
+      const response = await fetch('/api/menus', { // замените на ваш реальный endpoint
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer ' + token
+        }
+      });
+
+      if (response.ok) {
+        const menus = await response.json();
+        displayMenus(menus);
+      } else if (response.status === 401 || response.status === 403) {
+        alert('Сессия истекла. Войдите снова.');
+        localStorage.removeItem('accessToken');
+        window.location.href = "/login";
+      } else {
+        alert('Ошибка загрузки меню.');
+      }
+    }
+
+    function displayMenus(menus) {
+      const container = document.getElementById('menus');
+      container.innerHTML = '';
+      menus.forEach(menu => {
+        const item = document.createElement('div');
+        item.textContent = menu.name; // или другое поле меню
+        container.appendChild(item);
+      });
+    }
+
+    window.onload = loadMenus;
+  </script>
 </head>
 <body>
-<h1>Список Меню</h1>
-<table border="1">
-  <tr>
-    <th>ID</th>
-    <th>Name</th>
-    <th>Description</th>
-    <th>Price</th>
-    <th>Rating</th>
-  </tr>
-  <tr th:each="menu : ${menus}">
-    <td th:text="${menu.id}"></td>
-    <td th:text="${menu.name}"></td>
-    <td th:text="${menu.description}"></td>
-    <td th:text="${menu.price}"></td>
-    <td th:text="${menu.rating}"></td>
-  </tr>
-</table>
+<div class="container">
+  <h2>Ваше Меню</h2>
+  <div id="menus">
+    Загрузка...
+  </div>
+  <br>
+  <button class="btn btn-secondary" onclick="logout()">Выйти</button>
+</div>
+
+<script>
+  function logout() {
+    localStorage.removeItem('accessToken');
+    window.location.href = "/login";
+  }
+</script>
 </body>
 </html>

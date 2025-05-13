@@ -3,22 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <title>Welcome - Menu Restaurant</title>
-    <link rel="stylesheet" th:href="@{/css/styles.css}" /> <!-- если есть CSS -->
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <style>
+        body {
+            padding-top: 50px;
+            background-color: #f8f9fa;
+        }
+        h1 {
+            margin-bottom: 30px;
+            color: #343a40;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        nav li {
+            margin: 10px 0;
+        }
+        nav a {
+            font-size: 18px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-<h1>Welcome to Menu Restaurant!</h1>
+<div class="container text-center">
+    <h1>Welcome to Menu Restaurant!</h1>
 
+    <nav>
+        <ul class="list-unstyled">
+            <li><a th:href="@{/users}"><i class="fas fa-users"></i> Users</a></li>
+            <li><a th:href="@{/menus}"><i class="fas fa-utensils"></i> Menus</a></li>
+            <li><a th:href="@{/documents}"><i class="fas fa-file-alt"></i> Documents</a></li>
+            <li><a th:href="@{/logout}" class="btn btn-danger mt-3">Logout</a></li>
+        </ul>
+    </nav>
+</div>
 
-
-
-<nav>
-    <ul>
-        <li><a th:href="@{/users}">Users</a></li>
-        <li><a th:href="@{/menus}">Menus</a></li>
-        <li><a th:href="@{/documents}">Documents</a></li>
-        <li><a th:href="@{/logout}">Logout</a></li>
-    </ul>
-</nav>
-
+<!-- FontAwesome для иконок -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>

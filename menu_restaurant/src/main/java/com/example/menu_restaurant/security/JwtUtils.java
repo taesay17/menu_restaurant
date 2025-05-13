@@ -1,79 +1,68 @@
 package com.example.menu_restaurant.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.security.core.userdetails.UserDetails;
+import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.function.Function;
 
 @Component
 public class JwtUtils {
 
-    // ✅ Секретный ключ (лучше потом вынести в application.properties)
-    private final String jwtSecret = "secretKeyForJWTGeneration";
+    @Value("${jwt.secret}")
+    private String jwtSecret;
 
-    // ✅ Время жизни токена (1 день = 86400000 миллисекунд)
-    private final long jwtExpirationMs = 86400000;
+    private SecretKey secretKey;
 
-    /**
-     * Извлекает имя пользователя (subject) из токена
-     */
-    public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+    private final long accessTokenExpiration = 15 * 60 * 1000; // 15 минут
+    private final long refreshTokenExpiration = 30 * 60 * 1000; // 30 минут
+
+    @PostConstruct
+    public void init() {
+        this.secretKey = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
 
-    /**
-     * Извлекает дату истечения токена
-     */
-    public Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
-    }
-
-    /**
-     * Универсальный метод для извлечения любого значения из Claims
-     */
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
-    }
-
-    /**
-     * Извлекает все Claims из токена
-     */
-    private Claims extractAllClaims(String token) {
-        return Jwts.parser()
-                .setSigningKey(jwtSecret)
-                .parseClaimsJws(token)
-                .getBody();
-    }
-
-    /**
-     * Проверяет, истёк ли токен
-     */
-    private boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
-    }
-
-    /**
-     * Генерирует новый JWT токен для пользователя
-     */
-    public String generateToken(UserDetails userDetails) {
+    public String generateAccessToken(String username) {
         return Jwts.builder()
-                .setSubject(userDetails.getUsername()) // username в качестве subject
-                .setIssuedAt(new Date()) // дата выпуска
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs)) // дата истечения
-                .signWith(SignatureAlgorithm.HS512, jwtSecret) // подпись
+                .setSubject(username)
+                .claim("authorities", "ROLE_USER")
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpiration))
+                .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    /**
-     * Проверяет валидность токена
-     */
-    public boolean validateToken(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    public String generateRefreshToken(String username) {
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpiration))
+                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
+    }
+
+    public String extractUsername(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
     }
 }
