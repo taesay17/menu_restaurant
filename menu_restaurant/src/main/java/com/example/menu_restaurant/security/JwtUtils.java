@@ -18,8 +18,8 @@ public class JwtUtils {
 
     private SecretKey secretKey;
 
-    private final long accessTokenExpiration = 15 * 60 * 1000; // 15 минут
-    private final long refreshTokenExpiration = 30 * 60 * 1000; // 30 минут
+    private final long accessTokenExpiration = 15 * 60 * 1000;
+    private final long refreshTokenExpiration = 30 * 60 * 1000;
 
     @PostConstruct
     public void init() {
@@ -30,7 +30,7 @@ public class JwtUtils {
         return Jwts.builder()
                 .setSubject(username)
                 .claim("authorities", "ROLE_USER")
-                .setIssuedAt(new Date())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpiration))
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
@@ -65,4 +65,15 @@ public class JwtUtils {
                 .getBody()
                 .getSubject();
     }
+
+    public String createToken(String email, String roles) {
+        return Jwts.builder()
+                .setSubject(email)
+                .claim("roles", roles) // добавляем роли в payload
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + accessTokenExpiration))
+                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
 }

@@ -1,10 +1,14 @@
 package com.example.menu_restaurant.service;
 
+import com.example.menu_restaurant.config.JwtProperties;
 import com.example.menu_restaurant.model.RefreshToken;
 import com.example.menu_restaurant.repository.RefreshTokenRepository;
 import com.example.menu_restaurant.security.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+import java.util.Date;
 
 @Service
 public class JwtService {
@@ -24,6 +28,7 @@ public class JwtService {
 
         RefreshToken token = new RefreshToken();
         token.setToken(refreshToken);
+        token.setExpiryDate(Instant.now().plusMillis(3600000));
         token.setUsername(username);
         refreshTokenRepository.save(token);
 

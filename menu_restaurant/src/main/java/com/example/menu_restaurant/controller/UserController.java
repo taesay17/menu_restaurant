@@ -36,6 +36,10 @@ public class UserController {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
+        if (!roleRepository.existsByName("ROLE_USER")) {
+            throw new RuntimeException("ROLE_USER not found");
+        }
+
         Role userRole = roleRepository.findByName("ROLE_USER")
                 .orElseThrow(() -> new RuntimeException("ROLE_USER not found"));
 

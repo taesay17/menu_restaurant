@@ -12,7 +12,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationCodeGrantFilter;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 
 @Configuration
 @EnableMethodSecurity
@@ -47,7 +52,7 @@ public class SecurityConfiguration {
         http
                 .csrf(csrf -> csrf.disable())
                 .headers(headers -> headers
-                        .frameOptions(frameOptions -> frameOptions.disable()) // 👈 правильный способ
+                        .frameOptions(frameOptions -> frameOptions.disable())
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -63,6 +68,8 @@ public class SecurityConfiguration {
                                 "/register-user",
                                 "/css/**", "/js/**", "/img/**",
                                 "/login",
+                                "/register",
+                                "/oauth2/authorization",
                                 "/"
                         ).permitAll()
                         .anyRequest().authenticated()
@@ -72,4 +79,7 @@ public class SecurityConfiguration {
         return http.build();
     }
 
+
+
 }
+

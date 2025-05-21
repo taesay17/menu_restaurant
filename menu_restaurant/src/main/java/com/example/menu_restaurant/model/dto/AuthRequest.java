@@ -1,7 +1,11 @@
 package com.example.menu_restaurant.model.dto;
 
+import jakarta.validation.constraints.NotNull;
+
 public class AuthRequest {
+    @NotNull(message = "Username cannot be null")
     private String username;
+    @NotNull(message = "Password cannot be null")
     private String password;
 
     public String getUsername() { return username; }
